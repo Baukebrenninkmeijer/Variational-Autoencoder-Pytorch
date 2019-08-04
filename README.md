@@ -1,5 +1,5 @@
 # Variational Autoencoder in PyTorch and Fastai
-An implementation of the VAE in pytorch with the fastai data api, applied on MNIST. The notebook is the most comprehensive, but the script is runnable on its own as well. Results from sampling are saved in the `results` directory. 
+An implementation of the VAE in pytorch with the fastai data api, applied on MNIST TINY (only contains 3 and 7). The notebook is the most comprehensive, but the script is runnable on its own as well. Results from sampling are saved in the `results` directory. 
 
 
 ## Script usage:
