@@ -91,14 +91,14 @@ if __name__ == "__main__":
     parser.add_argument('--epochs', type=int, default=10, metavar='N',
                         help='number of epochs to train (default: 10)')
     parser.add_argument('--no-cuda', action='store_true', default=False,
-                        help='enables CUDA training')
+                        help='disables CUDA training')
     parser.add_argument('--emb-size', type=int, default=10, help='size of embedding (default 10)')
     args = parser.parse_args()
+
     args.cuda = not args.no_cuda and torch.cuda.is_available()
+    device = torch.device("cuda" if args.cuda else "cpu")
 
     torch.manual_seed(42)
-
-    device = torch.device("cuda" if args.cuda else "cpu")
 
     mnist = untar_data(URLs.MNIST_TINY)
     tfms = get_transforms(do_flip=False)
@@ -107,7 +107,7 @@ if __name__ == "__main__":
             .split_by_rand_pct(0.1, seed=42)
             .label_from_func(lambda x: x)
             .transform(tfms)
-            .databunch(num_workers=0, bs=16)
+            .databunch(num_workers=0, bs=args.batch_size)
             .normalize(do_y=True))
 
     image_size = data.one_batch()[0].shape[-1]
@@ -120,6 +120,6 @@ if __name__ == "__main__":
     my_learner.show_results(rows=4)
 
     print(f'Sampling 64 values and saving reconstruction. ')
-    sample = torch.randn(64, 2)
+    sample = torch.randn(64, args.emb_size)
     sample = vae.decode(sample).cpu()
     save_image(sample.view(64, 3, 28, 28), f'results/sample_{str(args.epochs)}.png')
